@@ -33,7 +33,7 @@ var downloadData = require('./modules/downloadData');
 domain.setIpAddresses();
 
 //variables
-global.webPort = +process.env.WEB_PORT || 8080;
+global.webPort = +process.env.WEB_PORT || 8083;
 global.webSocketPort = global.webPort + 1;
 
 //export modules
