@@ -17,7 +17,7 @@
  */
 
 //TODO replace with IPV4 and IPV6 FQDN
-var ipAddress = require('ip-address');
+//var ipAddress = require('ip-address');
 global.hasAddressIpv4=false;
 global.hasAddressIpv6=false;
 var os = require('os');
@@ -40,17 +40,21 @@ var ifaces = os.networkInterfaces();
         }
         //set IPv4 address
         if ('IPv4' === iface.family) {
-          var address4 = new ipAddress.Address4(iface.address);
-          if (address4.isValid()) {
-            global.AddressIpv4 = iface.address;
+          //var address4 = new ipAddress.Address4(iface.address);
+          //if (address4.isValid()) {
+if(true){
+            //global.AddressIpv4 = iface.address;
+            global.AddressIpv4 = 'cch-speedtest.solidthought.com';
             global.hasAddressIpv4 = true;
           }
         }
         //set IPv6 address
         if (('IPv6' === iface.family)) {
-          var address6 = new ipAddress.Address6(iface.address);
+
+//          var address6 = new ipAddress.Address6(iface.address);
           //Only globally scoped IPv6 addresses can be reached externally
-          if(address6.isValid() && address6.getScope() === 'Global'){
+  //        if(address6.isValid() && address6.getScope() === 'Global'){
+	if(false){
               global.AddressIpv6 = iface.address;
               global.hasAddressIpv6 = true;
           }
