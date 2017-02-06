@@ -47,6 +47,7 @@
             startTest();
         });
         getTestPlan(function (testPlan) {
+/*
             //initialize speedometer
             myChart = echarts.init(document.querySelector('.speed-gauge'));
             option = {
@@ -98,7 +99,7 @@
             option.series[0].data[0].name = '';
             option.series[0].detail.formatter = '';
             myChart.setOption(option, true);
-
+*/
             //show ipv6 fields if supported
             var resultsEl = document.querySelectorAll('.IPv6');
             if (testPlan.hasIPv6) {
@@ -107,7 +108,7 @@
                 }
             }
 
-            latencyTest(testPlan.hasIPv6 ? 'IPv6' : 'IPv4');
+            //latencyTest(testPlan.hasIPv6 ? 'IPv6' : 'IPv4');
 
         });
     }
@@ -158,6 +159,7 @@
     }
 
     function latencyBasedRoutingOnComplete(result) {
+	console.log('Routing Complete');
         //TODO update the base urls for websockets if you want to perform the latency test via websockets
         testPlan.baseUrlIPv4 = result.IPv4Address;
         testPlan.baseUrlIPv6 = result.IPv6Address;
@@ -175,6 +177,7 @@
 
     function startTest() {
 
+	console.log('Starting test');
         if (firstRun) {
             firstRun = false;
         } else {
@@ -202,13 +205,15 @@
 
     function latencyTest(version) {
         var currentTest = 'latency';
+/*
         option.series[0].data[0].value = 0;
         option.series[0].data[0].name = '';
         option.series[0].detail.formatter = '{value} ms';
         option.series[0].detail.show = false;
         myChart.setOption(option, true);
-
+*/
         function latencyHttpOnComplete(result) {
+	    console.log('Routing Complete');
 
             result = result.sort(function (a, b) {
                 return +a.time - +b.time;
@@ -232,6 +237,7 @@
                 latencyTest('IPv4');
                 return;
             }
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -247,6 +253,7 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
         }
 
         function latencyHttpOnTimeout(result) {
@@ -255,6 +262,7 @@
                 latencyTest('IPv4');
                 return;
             }
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -270,6 +278,7 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
         }
 
         function latencyHttpOnError(result) {
@@ -278,6 +287,7 @@
                 latencyTest('IPv4');
                 return;
             }
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -293,6 +303,7 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
         }
 
         var baseUrl = (version === 'IPv6') ? 'http://' + testPlan.baseUrlIPv6 + '/latency' : 'http://' + testPlan.baseUrlIPv4 + '/latency';
@@ -304,6 +315,7 @@
 
     function updateValue(selector, value) {
         var sel = ['.', selector, '-result'].join('');
+        console.log('Updating ' + sel + ' with ' + value);
         var dom = document.querySelector(sel);
 
         if (dom) {
@@ -312,6 +324,8 @@
     }
 
     function downloadProbe() {
+        $('.download-IPv4-result').text('Initializing...');
+        $('#download-progress').removeClass('stop');
         function downloadProbeTestOnComplete(result) {
             var downloadSizes = result;
             if(downloadSizes.length>0) {
@@ -326,7 +340,7 @@
             //use default value for download testing
             void (!(testPlan.hasIPv6 === 'IPv6') && setTimeout(function () { downloadTest(testPlan.hasIPv6 ? 'IPv6' : 'IPv4'); }, 500));
         }
-        var downloadProbeTestRun = new window.downloadProbeTest('/download?bufferSize='+downloadSize, '/downloadProbe', false, 3000,762939,downloadProbeTestOnComplete,
+        var downloadProbeTestRun = new window.downloadProbeTest('/download?bufferSize='+downloadSize, '/downloadProbe', false, 30000,762939,downloadProbeTestOnComplete,
             downloadProbeTestOnError);
         downloadProbeTestRun.start();
 
@@ -334,22 +348,29 @@
 
     function downloadTest(version) {
         var currentTest = 'download';
+	console.log('DownloadTest');
+/*
         option.series[0].data[0].value = 0;
         option.series[0].data[0].name = 'Testing Download ...';
         option.series[0].detail.formatter = formatSpeed;
         option.series[0].detail.show = true;
         myChart.setOption(option, true);
-
+*/
         function calculateStatsonComplete(result) {
+            console.log('Calculating stats for ' + currentTest);
             var finalValue = parseFloat(Math.round(result.stats.mean * 100) / 100).toFixed(2);
+            var statusClass = (finalValue > 1) ? 'pass' : 'fail';
+	    $('#download-card').addClass(statusClass);
             finalValue = (finalValue > 1000) ? parseFloat(finalValue / 1000).toFixed(2) + ' Gbps' : finalValue + ' Mbps';
             void (version === 'IPv6' && downloadTest('IPv4'));
             uploadProbe();
             //void (!(version === 'IPv6') && uploadTest(testPlan.hasIPv6 ? 'IPv6' : 'IPv4'));
             updateValue([currentTest, '-', version].join(''), finalValue);
+	    window['processComplete'] && processComplete();
         }
 
         function calculateStatsonError(result) {
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -365,17 +386,24 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
         }
 
         function downloadHttpOnComplete(result) {
-
+            console.log('Download Test Complete '+result);
+	    $('#download-progress').addClass('stop');
+      
             var calculateMeanStats = new window.calculateStats(result, calculateStatsonComplete, calculateStatsonError);
             calculateMeanStats.performCalculations();
         }
 
         function downloadHttpOnProgress(result) {
+            console.log('Downloading...');
+            updateValue([currentTest, '-', version].join(''), (Math.round(result * 100) / 100));
+/*
             option.series[0].data[0].value = result;
             myChart.setOption(option, true);
+*/
         }
 
         function downloadHttpOnAbort(result) {
@@ -384,6 +412,7 @@
                 downloadTest('IPv4');
                 return;
             }
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -399,14 +428,17 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
         }
 
         function downloadHttpOnTimeout(result) {
+		console.log('downloadHttpOnTimeout');
             if (version === 'IPv6') {
                 testPlan.hasIPv6 = false;
                 downloadTest('IPv4');
                 return;
             }
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -422,14 +454,17 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
         }
 
         function downloadHttpOnError(result) {
+		console.log('downloadHttpOnError '+result);
             if (version === 'IPv6') {
                 testPlan.hasIPv6 = false;
                 downloadTest('IPv4');
                 return;
             }
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -445,6 +480,7 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
         }
 
         var baseUrl = (version === 'IPv6') ? 'http://' + testPlan.baseUrlIPv6 : 'http://' + testPlan.baseUrlIPv4;
@@ -455,6 +491,9 @@
     }
 
     function uploadProbe() {
+	console.log('Upload Probe begin');
+        $('.upload-IPv4-result').text('Initializing...');
+        $('#upload-progress').removeClass('stop');
         function uploadProbeTestOnComplete(result) {
             if (result) {
                 uploadSize = result;
@@ -473,19 +512,25 @@
     }
 
     function uploadTest(version) {
+	console.log('Upload Test begin');
+        $('#upload-progress').removeClass('stop');
         var currentTest = 'upload';
+/*
         option.series[0].data[0].value = 0;
         option.series[0].data[0].name = 'Testing Upload...';
         option.series[0].detail.formatter = formatSpeed;
         myChart.setOption(option, true);
-
+*/
         function calculateStatsonComplete(result) {
             var finalValue = parseFloat(Math.round(result.stats.mean * 100) / 100).toFixed(2);
+            var statusClass = (finalValue > 1) ? 'pass' : 'fail';
+	    $('#upload-card').addClass(statusClass);
             finalValue = (finalValue > 1000) ? parseFloat(finalValue / 1000).toFixed(2) + ' Gbps' : finalValue + ' Mbps';
             void ((version === 'IPv6') && uploadTest('IPv4'));
             if (!(version === 'IPv6')) {
                 //update button text to communicate current state of test as In Progress
                 startTestButton.innerHTML = 'Start Test';
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -499,6 +544,7 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
             }
 
             updateValue([currentTest, '-', version].join(''), finalValue);
@@ -510,12 +556,18 @@
             startTestButton.innerHTML = 'Start Test';
         }
         function uploadHttpOnComplete(result) {
+            console.log('Upload Test Complete');
+	    $('#upload-progress').addClass('stop');
             var calculateMeanStats = new window.calculateStats(result, calculateStatsonComplete, calculateStatsonError);
             calculateMeanStats.performCalculations();
         }
         function uploadHttpOnProgress(result) {
+            console.log('Uploading...');
+            updateValue([currentTest, '-', version].join(''), (Math.round(result * 100) / 100));
+/*
             option.series[0].data[0].value = result;
             myChart.setOption(option, true);
+*/
         }
         function uploadHttpOnAbort(result) {
             if (version === 'IPv6') {
@@ -523,6 +575,8 @@
                 uploadTest('IPv4');
                 return;
             }
+                console.log('Upload Aborted');
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -538,6 +592,7 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
         }
         function uploadHttpOnTimeout(result) {
             if (version === 'IPv6') {
@@ -545,6 +600,7 @@
                 uploadTest('IPv4');
                 return;
             }
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -560,6 +616,7 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
         }
         function uploadHttpOnError(result) {
             if (version === 'IPv6') {
@@ -567,6 +624,8 @@
                 uploadTest('IPv4');
                 return;
             }
+                console.log('Upload Error');
+/*
                 //set test value to 0
                 option.series[0].data[0].value = 0;
                 //updat test status to complete
@@ -582,12 +641,14 @@
                 option.series[0].detail.show = false;
                 //update gauge
                 myChart.setOption(option, true);
+*/
         }
         var baseUrl = (version === 'IPv6') ? 'http://' + testPlan.baseUrlIPv6 : 'http://' + testPlan.baseUrlIPv4;
 
         var uploadHttpConcurrentTestSuite = new window.uploadHttpConcurrentProgress(baseUrl + '/upload', 'POST', 1, 15000, 15000, 2, uploadHttpOnComplete, uploadHttpOnProgress,
             uploadHttpOnError, uploadSize);
         uploadHttpConcurrentTestSuite.initiateTest();
+console.log('uploadHttpConcurrentTestSuite.initiateTest()');
 
     }
 
