@@ -1,76 +1,261 @@
-<!--
-  ~ /**
-  ~ * Copyright 2014 Comcast Cable Communications Management, LLC
-  ~ *
-  ~ * Licensed under the Apache License, Version 2.0 (the "License");
-  ~ * you may not use this file except in compliance with the License.
-  ~ * You may obtain a copy of the License at
-  ~ *
-  ~ * http://www.apache.org/licenses/LICENSE-2.0
-  ~ *
-  ~ * Unless required by applicable law or agreed to in writing, software
-  ~ * distributed under the License is distributed on an "AS IS" BASIS,
-  ~ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ * See the License for the specific language governing permissions and
-  ~ * limitations under the License.
-  ~ */
-  -->
 
-<html>
-
-<head>
-    <meta charset="utf-8"/>
-    <base href="/"/>
-    <title> Speed Test</title>
-    <link rel="stylesheet" type="text/css" href="speed-testJS.css">
-</head>
-
-<body>
-<div class="container speed-test">
-    <div class="row top">
-        <h1 class="logo"></h1>
-        <div class="speed-gauge">
-        </div>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Assessment | AmeriHealth Caritas</title>
+    <link rel="stylesheet" href="ext/css/app.css">
+    <script src="ext/js/jquery-3.1.1.slim.min.js"></script>
+    <script src="ext/js/is.min.js"></script>
+  </head>
+  <body>
+    <div class="row mast-head">
+      <div class="columns">
+        <span class="title">Compatibility Checker</span>
+        <a href="" class="logo">AmeriHealth Caritas</a>
+        <!-- <a href="" class="info-icon">More info</a> -->
+      </div>
     </div>
-    <div class="secondary-results flex">
-        <div class="flex">
-            <button class="action-start">Start Test</button>
+
+    <div class="row a-block">
+      <div class=" columns">
+        <!-- Start header -->
+
+        <div class="start" >
+          <img class="icon" src="ext/img/status/Start.png">
+          <h1>Getting Ready for Virtual&nbsp;Care</h1>
+          <p>To ensure you have the best experience with our services, we need to run a quick technology compatibility check.</p>
+          <p>This won’t change or save any information on your device or computer, and won’t affect your network settings.</p>
+          <button class="start action-start" onclick="window.location.href='#process'">Begin</button>
         </div>
-        <div class="latency-results">
-            <p>ping: <span class="latency-result test-result"></span></p>
+
+
+        <!--  Processing header -->
+
+        <div class="processing" style="display:none;">
+          <svg class="spinner" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+          </svg>
+
+          <h1>Processing</h1>
+ 
+          <p>Don’t worry this will only take a moment</p>
+          </div>
+
+        <div class="pass" style="display:none;">
+          <img class="icon" src="ext/img/status/good.png">
+          <h1>Compatibility Check: Passed</h1>
+          <p>This device and its connection is compatible with our virtual care services.</p>
+ 
+          <button class="hallow small">View Results</button>
         </div>
+
+        <!--  Fail header -->
+
+
+        <div class="fail-header" style="display:none;">
+          <img class="icon" src="ext/img/status/bad.png">
+          <h1>Compatibility Issues Detected</h1>
+          <p>Please review the issues below, along with suggested updates and fixes.</p>
+ 
+          <button class="hallow small">View Results</button>
+        </div>
+
+
+      </div>
     </div>
-    <div class="bottom">
-        <div class="results flex">
-            <div class="download flex">
-                <p>download</p>
-                <div class="wrapper">
-                    <i class="ip-icon">IPv4</i>
-                    <div class="download-IPv4-result test-result IPv4">
-                    </div>
-                </div>
-                <div class="wrapper IPv6 hide">
-                    <i class="ip-icon">IPv6</i>
-                    <div class="download-IPv6-result test-result IPv6">
-                    </div>
-                </div>
+
+<!-- Start Details
+<div class="row  results details-group">
+    <div class="large-2 columns">
+      <h3>Details</h3>
+        <div class="card 1st">
+          <img src="ext/img/Status.svg" class="icon"/>
+            <div class="desc">
+              <h6>Operating System</h6>
+              <span class="placeholder">-&nbsp;-</span>
             </div>
-            <div class="upload">
-                <p>upload</p>
-                <div class="wrapper">
-                    <i class="ip-icon">IPv4</i>
-                    <div class="upload-IPv4-result test-result IPv4">
-                    </div>
-                </div>
-                <div class="wrapper IPv6 hide">
-                    <i class="ip-icon">IPv6</i>
-                    <div class="upload-IPv6-result test-result IPv6">
-                    </div>
-                </div>
+        </div>
+        <div class="card 2nd">
+          <img src="ext/img/Status.svg" class="icon"/>
+            <div class="desc">
+              <h6>Browser</h6>
+              <span class="placeholder">-&nbsp;-</span>
             </div>
         </div>
     </div>
 </div>
+
+<div class="row results connection-group">
+    <div class="large-2 columns">
+      <h3>Connection Speed</h3>
+        <div class="card 1st">
+          <img src="ext/img/Status.svg" class="icon"/>
+            <div class="desc">
+              <h6>Upload Speed</h6>
+              <span class="placeholder">-&nbsp;-</span>
+            </div>
+        </div>
+        <div class="card 2nd">
+          <img src="ext/img/Status.svg" class="icon"/>
+            <div class="desc">
+              <h6>Download Speed</h6>
+              <span class="placeholder">-&nbsp;-</span>
+            </div>
+        </div>
+    </div>
+</div>
+End of Start -->
+<script>
+var platform = "Unknown";
+platform = is.mac() ? "Mac" : platform;
+platform = is.windows() ? "Windows" : platform;
+platform = is.ios() ? "iOS" : platform;
+platform = is.android() ? "Android" : platform;
+var platform_style = "Unknown";
+platform_style = is.mobile() ? "Mobile" : platform_style;
+platform_style = is.desktop() ? "Desktop" : platform_style;
+
+var browser = "Unknown";
+browser = is.chrome() ? "Chrome" : browser;
+browser = is.firefox() ? "Firefox" : browser;
+browser = is.ie() ? "Internet Explorer" : browser;
+browser = is.edge() ? "Edge" : browser;
+browser = is.opera() ? "Opera" : browser;
+browser = is.safari() ? "Safari" : browser;
+
+var is_supported = is.chrome('>=49')
+		|| is.firefox('>=49')
+		|| is.ie('>=11')
+		|| is.edge('>=14')
+		|| is.opera('>=41');
+
+console.log('Platform: ' + platform + ' Platform style: ' + platform_style + ' Browser: ' + browser + ' Supported: ' + is_supported);
+
+$(function(){
+  $('#browser-label').text(browser);
+  $('#platform-label').text(platform);
+  platform == "Unknown" ?
+    $('#os-card').addClass('fail') :
+    $('#os-card').addClass('pass');
+  is_supported ? 
+    $('#browser-card').addClass('pass') :
+    $('#browser-card').addClass('fail');
+})
+
+</script>
+<style>
+.details-group .fail-check, .details-group .pass-check{ display: none; }
+.fail .fail-check{ display: inline; }
+.pass .pass-check{ display: inline; }
+</style>
+<!-- Processing Details -->
+<a name="process"></a>
+<div class="row  results details-group">
+    <div class="large-2 columns">
+      <h3>Details</h3>
+        <div class="card 1st" id="os-card">
+          <img src="ext/img/Status.svg" class="icon"/>
+            <div class="desc">
+              <h6>Operating System</h6>
+              <span class="placeholder">
+                <span class="heading" id="platform-label"></span>
+                <span class="fail-check">Your computer is not supported</span>
+                <span class="pass-check">Compatible</span>
+              </span>
+            </div>
+        </div>
+        <div class="card 2nd" id="browser-card">
+          <img src="ext/img/Status.svg" class="icon"/>
+            <div class="desc">
+              <h6>Browser</h6>
+              <span class="placeholder">
+                <span class="heading" id="browser-label"></span>
+                <span class="fail-check">Please upgrade your browser to  <a href="https://www.google.com/chrome">Google&nbsp;Chrome</a></span>
+                <span class="pass-check">Compatible</span>
+              </span>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+.connection-group .fail-check, .connection-group .pass-check{ display: none; }
+.fail .fail-check{ display: inline; }
+.pass .pass-check{ display: inline; }
+</style>
+<div class="row results connection-group">
+    <div class="large-2 columns">
+      <h3>Connection Speed</h3>
+        <div class="card 1st centered" id="download-card">
+            <div class="desc">
+              <span class="large-num download-IPv4-result">&nbsp;</span>
+              <span>Download</span>
+              <div class="progressbar stop" id="download-progress">
+                <span class="loading"></span>
+              </div>
+                &nbsp;<span class="fail-check" style="">Insufficient Download Bandwidth<br /><a href="">More Info</a></span>
+              <span class="pass-check" style="">Compatible</span>
+              </div>
+            </div>
+        <div class="card 2nd centered" id="upload-card">
+            <div class="desc">
+              <span class="large-num upload-IPv4-result">&nbsp;</span>
+              <span>Upload</span>
+              <div class="progressbar stop" id="upload-progress">
+                <span class="loading"></span>
+              </div>
+              <span class="pass-check" style="">Compatible</span>
+                <span class="fail-check" style="">Insufficient Upload Bandwidth<br /><a href="">More Info</a></span>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<!-- End of Processing -->
+
+<!--Contact Form-->
+
+<script>
+function submit_email_form(){
+  $('#email-form').hide();
+  $('#email-form-container').html('<h2>Results emailed</h2>');
+  return false;
+}
+function processComplete(){
+  $('#email-form-submit-button').prop('value', 'Email my results');
+  $('#email-form-submit-button').prop( "disabled", false );
+}
+</script>
+<div class="row results form-group">
+    <div class="large-2 columns">
+      <h3>Additional Info</h3>
+      <div class="card big" id="email-form-container">
+        <form id="email-form" onsubmit="submit_email_form()">
+          <div class="form-half-split">
+            <label>Name</label>
+            <input type="text" placeholder="example: John Doe">
+          </div>
+          <div class="form-half-split">
+          <label>Device Nickname</label>
+          <input type="text" placeholder="example: Living room Laptop">
+          </div>
+          <div class="comments">
+          <label>Comments</label>
+          <input type="textarea" placeholder="Additional Comments" class="">
+         </div>
+          <div class="email-to">
+          <label>Email to:</label>
+          <input type="text" placeholder="Example@youremail.com, Example@youremail.com" class="">
+          </div>
+          <input type="submit" class="submit" disabled="disabled" value="Test in Progress..." id="email-form-submit-button">
+        </form>
+      </div>
+    </div>
+</div>
+<!--button class="small hallow run-again">Run Again</button-->
+
 
 <script src="lib/latencyBasedRouting.js"></script>
 <script src="lib/calculateStats.js"></script>
