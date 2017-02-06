@@ -85,7 +85,7 @@
                 if (this.finalResults && this.finalResults.length) {
                     this.clientCallbackComplete(this.finalResults);
                 } else {
-                    this.clientCallbackError('no measurements obtained');
+                    this.clientCallbackError('about: no measurements obtained');
                 }
                 this._running=false;
             }
@@ -103,7 +103,7 @@
                 if (this.finalResults && this.finalResults.length) {
                     this.clientCallbackComplete(this.finalResults);
                 } else {
-                    this.clientCallbackError('no measurements obtained');
+                    this.clientCallbackError('time out: no measurements obtained');
                 }
             }
             this._running=false;
@@ -140,7 +140,7 @@
                 if (this.finalResults && this.finalResults.length) {
                     this.clientCallbackComplete(this.finalResults);
                 } else {
-                    this.clientCallbackError('no measurements obtained');
+                    this.clientCallbackError('complete: no measurements obtained');
                 }
             }
         }
@@ -160,7 +160,7 @@
             this.clientCallbackComplete(this.finalResults);
           } else {
             this.abortAll();
-            this.clientCallbackError('no measurements obtained');
+            this.clientCallbackError('on progress: no measurements obtained');
           }
           this._running=false;
         }
